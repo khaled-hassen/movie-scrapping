@@ -1,6 +1,8 @@
 export interface Movie {
 	title: string;
 	year: string | undefined;
+	genre: any[] | undefined;
+	director: string | undefined;
 	streamLink: string | undefined;
 	rating: string;
 	img: { src: string | undefined; alt: string | undefined };

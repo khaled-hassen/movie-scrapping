@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import cheerio from 'cheerio';
 import fs from 'fs';
 import util from 'util';
@@ -84,6 +84,15 @@ export const parseMovies = async (
 			.text();
 
 		let streamLink = undefined;
+
+		const directorContainer = movieInfo.find('div.row > dl > dd')[2];
+		const director = $movie(directorContainer).find('a').text();
+		const genreContainer = movieInfo.find('div.row > dl > dd')[0];
+		const genre = $movie(genreContainer)
+			.find('a')
+			.map((_, genre) => $movie(genre).text())
+			.toArray();
+
 		try {
 			await page.waitForFunction(
 				"document.getElementById('iframe-embed').getAttribute('src')",
@@ -94,6 +103,8 @@ export const parseMovies = async (
 
 		const movie: Movie = {
 			title,
+			director,
+			genre,
 			img,
 			year,
 			rating,
@@ -132,7 +143,7 @@ const main = async () => {
 	}
 
 	try {
-		const options = {
+		const options: puppeteer.LaunchOptions = {
 			args: [
 				'--no-sandbox',
 				'--disable-setuid-sandbox',
@@ -141,6 +152,8 @@ const main = async () => {
 				'--disable-gpu',
 			],
 			headless: true,
+			executablePath:
+				'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 		};
 		const browser = await puppeteer.launch(options);
 		const page = await browser.newPage();
