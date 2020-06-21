@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"movies": "node dist/movies/movies-scraper.js"
+		"movies": "tsc && node dist/movies/movies-scraper.js"
 	},
 	"keywords": [],
 	"author": "",
